@@ -6,7 +6,7 @@ const db = require('../config/db');
 exports.getProfile = async (req, res) => {
     try {
         const [users] = await db.execute(
-            'SELECT email, first_name, last_name, profile_image FROM users WHERE email = ?', 
+            'SELECT email, first_name, last_name, profile_image FROM users WHERE email = ?',
             [req.user.email]
         );
 
@@ -17,7 +17,7 @@ exports.getProfile = async (req, res) => {
         res.status(200).json({
             status: 0,
             message: "Sukses",
-            data: users[0]
+            data: users[0],
         });
     } catch (error) {
         console.error(error);
@@ -42,14 +42,14 @@ exports.updateProfile = async (req, res) => {
         );
 
         const [users] = await db.execute(
-            'SELECT email, first_name, last_name, profile_image FROM users WHERE email = ?', 
+            'SELECT email, first_name, last_name, profile_image FROM users WHERE email = ?',
             [req.user.email]
         );
 
         res.status(200).json({
             status: 0,
             message: "Update Pofile berhasil",
-            data: users[0]
+            data: users[0],
         });
     } catch (error) {
         console.error(error);
@@ -58,7 +58,7 @@ exports.updateProfile = async (req, res) => {
 };
 
 // ==========================================
-// 3. UPLOAD FOTO PROFIL
+// 3. UPDATE FOTO PROFIL
 // ==========================================
 exports.updateProfileImage = async (req, res) => {
     if (!req.file) {
@@ -66,25 +66,22 @@ exports.updateProfileImage = async (req, res) => {
     }
 
     try {
-        // Buat URL yang bisa diakses publik
-        const imageUrl = `http://localhost:${process.env.PORT || 3000}/uploads/${req.file.filename}`;
+        const imageUrl = `${process.env.APP_URL}/uploads/${req.file.filename}`;
 
-        // Update database
         await db.execute(
             'UPDATE users SET profile_image = ? WHERE email = ?',
             [imageUrl, req.user.email]
         );
 
-        // Ambil data terbaru untuk response
         const [users] = await db.execute(
-            'SELECT email, first_name, last_name, profile_image FROM users WHERE email = ?', 
+            'SELECT email, first_name, last_name, profile_image FROM users WHERE email = ?',
             [req.user.email]
         );
 
         res.status(200).json({
             status: 0,
             message: "Update Profile Image berhasil",
-            data: users[0]
+            data: users[0],
         });
 
     } catch (error) {
