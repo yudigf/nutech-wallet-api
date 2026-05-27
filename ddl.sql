@@ -1,8 +1,3 @@
--- ==========================================
--- DATABASE SETUP
--- ==========================================
-CREATE DATABASE IF NOT EXISTS nutech_wallet;
-USE nutech_wallet;
 
 -- ==========================================
 -- TABEL USERS
