@@ -37,12 +37,14 @@ router.put('/profile/image', authMiddleware, (req, res, next) => {
 // ==========================================
 // MODUL 2: INFORMATION
 // ==========================================
+
 router.get('/banner', informationController.getBanners);                         // Public
 router.get('/services', authMiddleware, informationController.getServices);      // Private
 
 // ==========================================
 // MODUL 3: TRANSACTION
 // ==========================================
+
 router.get('/balance', authMiddleware, transactionController.getBalance);
 router.post('/topup', authMiddleware, transactionController.topUp);
 router.post('/transaction', authMiddleware, transactionController.transaction);

@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware Global
 app.use(cors());
-app.use(express.json()); // Wajib ada agar Express bisa membaca request body berformat JSON
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Membuka akses publik ke folder uploads
+app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Cek koneksi database
 require('./config/db');
@@ -30,5 +30,5 @@ app.use('/', apiRoutes);
 
 // Menjalankan Server
 app.listen(PORT, () => {
-    console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
+    console.log(`Server berjalan di http://localhost:${PORT}`);
 });

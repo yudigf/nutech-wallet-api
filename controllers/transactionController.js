@@ -1,6 +1,6 @@
 const db = require('../config/db');
 
-// Menghasilkan nomor invoice unik dengan format: INV-DDMMYYYY-XXX
+// generate nomor invoice unik dengan format: INV-DDMMYYYY-XXX
 const generateInvoice = () => {
     const date = new Date();
     const dmy = `${String(date.getDate()).padStart(2, '0')}${String(date.getMonth() + 1).padStart(2, '0')}${date.getFullYear()}`;
@@ -42,13 +42,11 @@ exports.topUp = async (req, res) => {
         });
     }
 
-    // Gunakan dedicated connection untuk menjamin atomicity transaksi database
     const conn = await db.getConnection();
 
     try {
         await conn.beginTransaction();
 
-        // Kunci baris user (FOR UPDATE) untuk mencegah race condition saat top up bersamaan
         const [users] = await conn.execute('SELECT id, balance FROM users WHERE email = ? FOR UPDATE', [req.user.email]);
         const user = users[0];
 
@@ -103,11 +101,11 @@ exports.transaction = async (req, res) => {
         }
         const service = services[0];
 
-        // Kunci baris user untuk mencegah race condition
+        // Mencegah race condition
         const [users] = await conn.execute('SELECT id, balance FROM users WHERE email = ? FOR UPDATE', [req.user.email]);
         const user = users[0];
 
-        // Validasi kecukupan saldo
+        // Validasi saldo
         if (user.balance < service.service_tariff) {
             await conn.rollback();
             return res.status(400).json({ status: 108, message: "Saldo tidak mencukupi", data: null });
@@ -160,7 +158,6 @@ exports.getTransactionHistory = async (req, res) => {
         let query = 'SELECT invoice_number, transaction_type, description, total_amount, created_on FROM transactions WHERE user_id = ? ORDER BY created_on DESC';
         const params = [userId];
 
-        // Terapkan pagination jika limit diberikan
         if (limit > 0) {
             query += ' LIMIT ? OFFSET ?';
             params.push(limit, offset);

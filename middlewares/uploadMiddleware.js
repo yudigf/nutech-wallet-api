@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     },
 });
 
-// Hanya izinkan format JPEG dan PNG
+// Hanya format JPEG dan PNG
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
